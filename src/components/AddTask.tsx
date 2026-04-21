@@ -20,7 +20,8 @@ import type { TaskType } from "../Types/TaskType";
 import type { taskPriority } from "../Types/TaskType";
 import type { taskStatus } from "../Types/TaskType";
 import { useCreateTaskMutation, useUpdateTaskMutation } from "../API/slices/TaskSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 const taskSchema = Yup.object({
   title: Yup.string().required("title is required"),
   description: Yup.string().required("title is required"),
@@ -30,21 +31,28 @@ const taskSchema = Yup.object({
 export default function AddEditTaskModal({ open, onClose,edit,old_task }: addTask) {
   const[createTask, {isLoading}]=useCreateTaskMutation();
   const [updateTask, {isLoading:updateLoading}]=useUpdateTaskMutation();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const onAdd =async (values: TaskType) => {
+    console.log("type of date",typeof values.dueDate)
   try{
     await createTask(values).unwrap()
+       handleCancel();
   }catch(err){
     console.log("adding error",err)
+    const error=err as FetchBaseQueryError
+    const errorData = error.data as { message: string };
+    setErrorMessage(errorData.message)
   }
-   handleCancel();
+
 };
 const onUpdate =async (values: TaskCardProps) => {
   try{
     await updateTask(values).unwrap()
+    handleCancel();
   }catch(err){
     console.log("updating error",err)
   }
-   handleCancel();
+   
 }
  const taskForm = useFormik({
     initialValues: {
@@ -60,16 +68,16 @@ const onUpdate =async (values: TaskCardProps) => {
       const status = values.status as taskStatus;
       console.log("priority", priority, "status", status);
       if(edit){
-        onUpdate({ ...values, priority, status,id:old_task!.id });
+        onUpdate({ ...values,dueDate:new Date(values.dueDate), priority, status,id:old_task!.id });
       }
       else
-      onAdd({ ...values, priority, status });
+      onAdd({ ...values,dueDate:new Date(values.dueDate), priority, status });
     },
   });
 useEffect(()=>{
   if(edit){
-    taskForm.setValues(old_task!);
-    taskForm.setFieldValue("dueDate",old_task?.dueDate.split("T")[0]);
+    taskForm.setValues({...old_task!,dueDate:old_task!.dueDate.toISOString().split("T")[0]});
+    taskForm.setFieldValue("dueDate",old_task?.dueDate);
 
   }
   // eslint-disable-next-line
@@ -78,13 +86,14 @@ useEffect(()=>{
 
   const handleCancel = () => {
     if(edit){
-      taskForm.setValues(old_task!);
-      taskForm.setFieldValue("dueDate",old_task?.dueDate.split("T")[0]);
+      taskForm.setValues({...old_task!,dueDate:old_task!.dueDate.toISOString().split("T")[0]});
+      taskForm.setFieldValue("dueDate",old_task?.dueDate);
     }
     else{
           taskForm.resetForm();
 
     }
+    setErrorMessage(null);
     onClose();
   };
 
@@ -489,6 +498,16 @@ useEffect(()=>{
           
         </Button>
       </DialogActions>
+      {errorMessage && (
+        <div
+          className="text-red-500 text-center pb-6"
+          style={{
+            color: "#ef4444",
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
     </Dialog>
   );
 }

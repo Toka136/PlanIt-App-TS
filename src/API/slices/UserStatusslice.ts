@@ -9,6 +9,7 @@ const UserStatus=createSlice({
       reducers: {
         setIsLoggedIn: (state: UserStatusState, action: { payload: boolean }) => {
           state.isLoggedIn = action.payload
+          localStorage.setItem("isLoggedIn",JSON.stringify(action.payload))
         } 
       }
 })

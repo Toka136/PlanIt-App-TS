@@ -18,9 +18,10 @@ function SignUpPage  ()  {
      const navigate=useNavigate()
      const[avatar,setAvatar]=useState<File|null>(null)
      const[imgPreview,setImgPreview]=useState("")
+    //  const [errorMessage,setErrorMessage]=useState("")
         const [showPassword, setShowPassword] = useState(false);
         const toastSuccess=()=>toast.success("registration successful")
-        const toastError=()=>toast.error("Something went wrong")
+        const toastError=(err:string)=>toast.error(err)
         const toastInvalid=()=>toast.error("User already exist")
         const registerFormik=useFormik({
             initialValues: {
@@ -54,7 +55,7 @@ function SignUpPage  ()  {
                 const errorData = err.data as { message: string };
                 if(errorData?.message?.includes("User already exist")){toastInvalid()}
                 else
-                toastError()
+                toastError(errorData.message)
                 console.log(error)
             }
         }

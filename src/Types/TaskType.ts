@@ -5,7 +5,7 @@ export interface TaskCardProps {
   title: string;
   id: string;
   description: string;
-  dueDate: string;
+  dueDate: Date;
   status: taskStatus;
   priority: taskPriority;
 }
@@ -13,7 +13,7 @@ export interface Task {
   _id: string;
   title: string;
   description: string;
-  dueDate: string;
+  dueDate: Date;
   owner: string;
   status: taskStatus;
   priority: taskPriority;
@@ -28,7 +28,9 @@ export interface ResponseTask{
 }
 export interface RequestTask{
   limit: number,
-  page: number
+  page: number,
+  status?:string,
+  search?:string
 }
 export type addTask={
   open:boolean,
@@ -43,7 +45,7 @@ export interface TaskDelete{
 export interface TaskType{
   title:string,
   description:string,
-  dueDate:string,
+  dueDate:Date,
   priority:taskPriority,
   status:taskStatus
 }

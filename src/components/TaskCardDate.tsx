@@ -55,7 +55,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                     className={`text-sm font-semibold ${DUE_DATE_COLOR[task.relativeTime] ?? "text-white"}`}
 
         >
-          {task.dueDate.split("T")[0]}
+          {task.dueDate.toString().split("T")[0]}
         </span>
         <span className="text-gray-500 text-xs">{task.relativeTime}</span>
       </div>

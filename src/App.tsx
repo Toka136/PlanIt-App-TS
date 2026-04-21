@@ -14,9 +14,9 @@ function App() {
   <Routes>
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<SignUpPage />} />
+    <Route path="/*" element={userStatus?<General />:<Navigate to="/login" />} />
   </Routes>
-      {!userStatus && <Navigate to="/login" replace />}
-      {userStatus &&<General />}
+ 
 
   </>
   )

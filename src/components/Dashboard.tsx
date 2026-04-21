@@ -7,7 +7,7 @@ import {
 import TaskCard from './TaskCard';
 import { useGetTasksQuery } from '../API/slices/TaskSlice';
 import { CircularProgress } from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { paginationType } from '../Types/TaskType';
 import AddEditTaskModal from './AddTask';
 import Pagination from '@mui/material/Pagination';
@@ -16,7 +16,8 @@ import Stack from '@mui/material/Stack';
 function BasicPagination({count,onPageChange}:paginationType) {
   return (
     <Stack spacing={2} color={"white"} className=' items-center flex'>
-      <Pagination count={count} onChange={(_,page)=>onPageChange(page)} sx={{
+      <Pagination count={count} onChange={(_,page)=>onPageChange(page)} 
+      sx={{
     '& .MuiPaginationItem-root': {
       color: '#fff', // Normal state color
     },
@@ -37,50 +38,23 @@ function Dashboard  () {
   const [openModel, setOpenModel]=useState<boolean>(false)
   const[edit,setEdit]=useState<boolean>(false)
     const [page,setPage]=useState<number>(1)
-  const{data,isLoading,isError,error}=useGetTasksQuery({limit:3,page})
-  const[searchText,setSearchText]=useState<string>("")
-  const[filterText,setFilterText]=useState<string>("All")
-  // const [stopLoad,setStopLoad]=useState<boolean>(false)
-  // useEffect(()=>{
-  //   console.log("searchText",searchText)
-  //   if(!data){return}
-  //   if(searchText.length===0){setTasks(data!.data);return}
-  //   const temp=tasks.filter(task=>task.title.toLowerCase().includes(searchText.toLowerCase()))
-  //   setTasks(temp)
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[searchText])
-  // useEffect(()=>{
-  //   console.log("filterText",filterText)
-  //   if(!data){return}
-  //   if(filterText==="All"){setTasks(data!.data);return}
-  //   const temp=data!.data.filter(task=>task.status===filterText)
-  //   setTasks(temp)
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[filterText])
-    // const handleLogout=async()=>{
-    //   try{
-    //     await logout().unwrap()
-    //     dispatch(setIsLoggedIn(false))
-    //   }catch(err){
-    //     console.log("logout err",err)
-    //   }
-    // }
-  const filteredTasks = useMemo(() =>{
-    console.log("data",data?.data);
- return data?.data?.filter(task => {
-  console.log("taskone",task);
-  if (searchText === "" && filterText === "All") {
-    return true;
-  }
+    const[filterText,setFilterText]=useState<string>("All")
+    const[searchText,setSearchText]=useState<string>("")
+  const{data,isLoading,isError,error}=useGetTasksQuery({limit:3,page,status:filterText,search:searchText})
+//   const filteredTasks = useMemo(() =>{
+//     console.log("data",data?.data);
+//  return data?.data?.filter(task => {
+//   console.log("taskone",task);
+//   if (searchText === "") {
+//     return true;
+//   }
 
-  const matchesSearch =
-    task.title.toLowerCase().includes(searchText.toLowerCase());
+//   const matchesSearch =
+//     task.title.toLowerCase().includes(searchText.toLowerCase());
  
-  const matchesFilter =
-    filterText === "All" || task.status === filterText;
 
-  return matchesSearch && matchesFilter;})
-},[searchText,filterText,data]);
+//   return matchesSearch })
+// },[searchText,filterText,data]);
   useEffect(()=>{
     if(error){
       console.log(error)
@@ -146,13 +120,17 @@ function Dashboard  () {
           </div>
 
           {/* Task Cards Grid */}
+          {data?.count===0&&<div className="flex justify-center items-center h-full">
+            <h2 className="text-3xl font-bold mb-1 text-white">No Tasks Found</h2>
+          </div>}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-8">
-            {filteredTasks?.map((task)=>
+            {data?.data?.map((task)=>
             <TaskCard key={task._id} title={task.title} status={task.status} priority={task.priority} description={task.description} dueDate={task.dueDate}  id={task._id}/>)}
            
           </div>
         </div>
-      <BasicPagination count={+(data!.pages)} onPageChange={(page: number) => setPage(page)}/>
+         {data?.count!==0&&
+      <BasicPagination count={+(data!.pages)} onPageChange={(page: number) => setPage(page)}/>}
       </main>
 
       {/* Floating Action Button */}
