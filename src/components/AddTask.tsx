@@ -34,6 +34,7 @@ export default function AddEditTaskModal({ open, onClose,edit,old_task }: addTas
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const onAdd =async (values: TaskType) => {
     console.log("type of date",typeof values.dueDate)
+    console.log(" date", values.dueDate)
   try{
     await createTask(values).unwrap()
        handleCancel();
@@ -46,11 +47,16 @@ export default function AddEditTaskModal({ open, onClose,edit,old_task }: addTas
 
 };
 const onUpdate =async (values: TaskCardProps) => {
+  console.log("updating task",values)
   try{
     await updateTask(values).unwrap()
     handleCancel();
   }catch(err){
     console.log("updating error",err)
+    console.log("adding error",err)
+    const error=err as FetchBaseQueryError
+    const errorData = error.data as { message: string };
+    setErrorMessage(errorData.message)
   }
    
 }
@@ -68,26 +74,34 @@ const onUpdate =async (values: TaskCardProps) => {
       const status = values.status as taskStatus;
       console.log("priority", priority, "status", status);
       if(edit){
-        onUpdate({ ...values,dueDate:new Date(values.dueDate), priority, status,id:old_task!.id });
+        onUpdate({ ...values,dueDate:new Date(values.dueDate).toISOString(), priority, status,id:old_task!.id });
       }
       else
-      onAdd({ ...values,dueDate:new Date(values.dueDate), priority, status });
+      onAdd({ ...values,dueDate:new Date(values.dueDate).toISOString(), priority, status });
     },
   });
-useEffect(()=>{
-  if(edit){
-    taskForm.setValues({...old_task!,dueDate:old_task!.dueDate.toISOString().split("T")[0]});
-    taskForm.setFieldValue("dueDate",old_task?.dueDate);
-
+useEffect(() => {
+  if (edit && old_task) {
+    taskForm.setValues({
+      ...old_task,
+      dueDate: old_task.dueDate
+        ? new Date(old_task.dueDate).toISOString().split("T")[0]
+        : "",
+    });
   }
-  // eslint-disable-next-line
-},[edit])
+  //eslint-disable-next-line
+}, [edit]);
  
 
   const handleCancel = () => {
     if(edit){
-      taskForm.setValues({...old_task!,dueDate:old_task!.dueDate.toISOString().split("T")[0]});
-      taskForm.setFieldValue("dueDate",old_task?.dueDate);
+    taskForm.setValues({
+      ...old_task!,
+      dueDate: old_task?.dueDate
+        ? new Date(old_task.dueDate).toISOString().split("T")[0]
+        : "",
+    });
+    // setEdit(false);
     }
     else{
           taskForm.resetForm();
@@ -98,6 +112,9 @@ useEffect(()=>{
   };
 
   return (
+    <>
+    {    console.log("dueDate:old_task!.dueDate",old_task?.dueDate.toString().split("T")[0])
+}
     <Dialog
       open={open}
       onClose={handleCancel}
@@ -508,6 +525,6 @@ useEffect(()=>{
           {errorMessage}
         </div>
       )}
-    </Dialog>
+    </Dialog></>
   );
 }

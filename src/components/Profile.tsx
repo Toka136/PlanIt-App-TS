@@ -6,7 +6,7 @@ import type {  UpdateData } from "../Types/AuthTypes";
 import { CircularProgress } from "@mui/material";
 import { Eye, EyeOff } from "lucide-react";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
 const profileSchema=Yup.object({
   userName: Yup.string().required(),
   currentPassword: Yup.string(),
@@ -23,7 +23,7 @@ export default function ProfileSettings() {
    const [avatar, setAvatar] = useState<File|null>(null);
    const [showPassword, setShowPassword] = useState<boolean>(false);
    const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
-   const toastInvalid=()=>toast.error("current password is wrong!!")
+   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const profilFormik=useFormik({
    initialValues:{
   userName: "",
@@ -53,7 +53,9 @@ export default function ProfileSettings() {
     if(error){
       const e=error as FetchBaseQueryError
       const errorData=e.data as {message:string}
-      if(errorData?.message?.includes("current password is wrong!!")){toastInvalid()};
+
+        setErrorMessage(errorData.message)
+     
       console.log("error",error)
     }
   },[error])
@@ -69,6 +71,7 @@ export default function ProfileSettings() {
      try {
       const res=await updateUser(formData).unwrap()
       console.log(res)
+      setErrorMessage(null)
       
      } catch (error) {
        console.log("update error",error)
@@ -352,8 +355,9 @@ export default function ProfileSettings() {
       )}
     
     </div>
-
   </div>
+      <p className="text-md text-red-500 mt-8 text-center " >{errorMessage}</p>
+
 </div>
 
         {/* Save Button */}

@@ -8,7 +8,7 @@ export const TaskSlice=createApi({
     tagTypes: ["Task"],
     endpoints: (builder) => ({
         getTasks: builder.query<ResponseTask, RequestTask>({
-            query: ({limit, page, status, search}) => `tasks/?limit=${limit}&page=${page}&status=${status}&search=${search}`,
+            query: ({limit, page, status, search}) => `tasks/?limit=${+limit}&page=${+page}&status=${status}&search=${search}`,
             providesTags: ["Task"],
         }),
         createTask: builder.mutation<Task, TaskType>({

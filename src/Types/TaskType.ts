@@ -5,7 +5,7 @@ export interface TaskCardProps {
   title: string;
   id: string;
   description: string;
-  dueDate: Date;
+  dueDate: string;
   status: taskStatus;
   priority: taskPriority;
 }
@@ -36,7 +36,8 @@ export type addTask={
   open:boolean,
   edit:boolean,
   old_task?:TaskCardProps,
-  onClose:()=>void
+  onClose:()=>void,
+  setEdit?:(edit:boolean)=>void
 }
 export interface TaskDelete{
   status:string,
@@ -45,7 +46,7 @@ export interface TaskDelete{
 export interface TaskType{
   title:string,
   description:string,
-  dueDate:Date,
+  dueDate:string,
   priority:taskPriority,
   status:taskStatus
 }
@@ -85,5 +86,6 @@ export interface TaskCDResponse{
 }
 export type paginationType={
   count: number,
- onPageChange: ( page: number) => void
+ onPageChange: ( page: number) => void,
+ page: number
 }

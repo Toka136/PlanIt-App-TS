@@ -13,10 +13,10 @@ import AddEditTaskModal from './AddTask';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
-function BasicPagination({count,onPageChange}:paginationType) {
+function BasicPagination({count,onPageChange,page}:paginationType) {
   return (
     <Stack spacing={2} color={"white"} className=' items-center flex'>
-      <Pagination count={count} onChange={(_,page)=>onPageChange(page)} 
+      <Pagination page={page} count={count} onChange={(_,page)=>onPageChange(page)} 
       sx={{
     '& .MuiPaginationItem-root': {
       color: '#fff', // Normal state color
@@ -40,21 +40,8 @@ function Dashboard  () {
     const [page,setPage]=useState<number>(1)
     const[filterText,setFilterText]=useState<string>("All")
     const[searchText,setSearchText]=useState<string>("")
-  const{data,isLoading,isError,error}=useGetTasksQuery({limit:3,page,status:filterText,search:searchText})
-//   const filteredTasks = useMemo(() =>{
-//     console.log("data",data?.data);
-//  return data?.data?.filter(task => {
-//   console.log("taskone",task);
-//   if (searchText === "") {
-//     return true;
-//   }
-
-//   const matchesSearch =
-//     task.title.toLowerCase().includes(searchText.toLowerCase());
- 
-
-//   return matchesSearch })
-// },[searchText,filterText,data]);
+    const limit:number=3
+  const{data,isLoading,isError,error}=useGetTasksQuery({limit:limit,page,status:filterText,search:searchText})
   useEffect(()=>{
     if(error){
       console.log(error)
@@ -62,16 +49,13 @@ function Dashboard  () {
     } 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[isError])
-  // useEffect(()=>{
-  //   if(!isLoading&&data){
-  //     console.log("data.data",data.data)
-  //     setTasks(data!.data)
-  //     setStopLoad(true)
-  //   }
-  // },[isLoading,data])
-  
+  useEffect(() => {
+    setPage(1);
+  //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterText,searchText]);
   return (
     <>
+    
     {isLoading?<div className='flex justify-center items-center h-full'>
       <CircularProgress />
     </div>:
@@ -125,12 +109,12 @@ function Dashboard  () {
           </div>}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-8">
             {data?.data?.map((task)=>
-            <TaskCard key={task._id} title={task.title} status={task.status} priority={task.priority} description={task.description} dueDate={task.dueDate}  id={task._id}/>)}
+            <TaskCard key={task._id} title={task.title} status={task.status} priority={task.priority} description={task.description} dueDate={new Date(task.dueDate).toISOString()}  id={task._id}/>)}
            
           </div>
         </div>
          {data?.count!==0&&
-      <BasicPagination count={+(data!.pages)} onPageChange={(page: number) => setPage(page)}/>}
+      <BasicPagination page={page} count={+(data!.pages)} onPageChange={(page: number) => setPage(page)}/>}
       </main>
 
       {/* Floating Action Button */}
