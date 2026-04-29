@@ -50,9 +50,11 @@ function Dashboard  () {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[isError])
   useEffect(() => {
-    setPage(1);
+   if (data?.data.length === 0 && page > 1) {
+      setPage(1);
+    }
   //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterText,searchText]);
+  }, [filterText,searchText,data]);
   return (
     <>
     
@@ -85,7 +87,7 @@ function Dashboard  () {
           <div className="flex flex-wrap gap-6 mb-8 items-center text-sm">
             <div className="flex items-center gap-2">
               <span className="text-gray-400">Status:</span>
-              <select onChange={(e)=>setFilterText(e.target.value as string)} className="bg-[#1e1e1e] px-4 py-2 rounded-xl text-white flex items-center gap-2 border border-gray-800">
+              <select onChange={(e)=>{setFilterText(e.target.value as string)}} className="bg-[#1e1e1e] px-4 py-2 rounded-xl text-white flex items-center gap-2 border border-gray-800">
                 <option value={"All"}  defaultChecked={true} className='text-white'>
                    All Tasks
                 </option>
