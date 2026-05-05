@@ -19,8 +19,15 @@ export const UserSlice=createApi({
             }),
             invalidatesTags: ["User"],
         }),
+        deleteUser: builder.mutation<void, void>({
+            query: () => ({
+                url: "users/profile/delete",
+                method: "DELETE",
+            }),
+          
+        }),
       
     }),
 })
 
-export const {useGetUserQuery,useUpdateUserMutation}=UserSlice
+export const {useGetUserQuery,useUpdateUserMutation,useDeleteUserMutation}=UserSlice

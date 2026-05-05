@@ -5,13 +5,15 @@ import {
   Plus,
 } from 'lucide-react';
 import TaskCard from './TaskCard';
-import { useGetTasksQuery } from '../API/slices/TaskSlice';
+import { useGetTasksQuery } from '../../API/slices/TaskSlice';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
-import type { paginationType } from '../Types/TaskType';
+import type { paginationType } from '../../Types/TaskType';
 import AddEditTaskModal from './AddTask';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { useSelector } from 'react-redux';
+import type { UserStatusState } from '../../Types/AuthTypes';
 
 function BasicPagination({count,onPageChange,page}:paginationType) {
   return (
@@ -41,7 +43,12 @@ function Dashboard  () {
     const[filterText,setFilterText]=useState<string>("All")
     const[searchText,setSearchText]=useState<string>("")
     const limit:number=3
-  const{data,isLoading,isError,error}=useGetTasksQuery({limit:limit,page,status:filterText,search:searchText})
+  const{data,isLoading,isError,error,refetch}=useGetTasksQuery({limit:limit,page,status:filterText,search:searchText})
+    const userStatus=useSelector((state:UserStatusState)=>state.UserStatus.isLoggedIn)
+    useEffect(()=>{
+      if(userStatus)
+      refetch()
+    },[userStatus])
   useEffect(()=>{
     if(error){
       console.log(error)
@@ -62,7 +69,7 @@ function Dashboard  () {
       <CircularProgress />
     </div>:
 
-    <div className="flex h-auto bg-[#0a0a0a] text-white font-sans">
+    <div className="flex h-auto bg-[#0a0a0a] text-white font-sans min-h-screen">
       
         <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top Header */}
@@ -106,7 +113,8 @@ function Dashboard  () {
           </div>
 
           {/* Task Cards Grid */}
-          {data?.count===0&&<div className="flex justify-center items-center h-full">
+          {data?.count===0&&
+          <div className="flex justify-center items-center h-full">
             <h2 className="text-3xl font-bold mb-1 text-white">No Tasks Found</h2>
           </div>}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-8">
@@ -120,7 +128,7 @@ function Dashboard  () {
       </main>
 
       {/* Floating Action Button */}
-      <button onClick={()=>{setOpenModel(true);setEdit(false)}} className="fixed bottom-8 right-8 bg-[#8B5CF6] p-4 rounded-full shadow-lg shadow-purple-500/20 hover:scale-110 transition-transform">
+      <button onClick={()=>{setOpenModel(true);setEdit(false)}} className="fixed  bottom-8 right-8 bg-[#8B5CF6] p-4 rounded-full shadow-lg shadow-purple-500/20 hover:scale-110 transition-transform">
         <Plus className="text-white w-6 h-6" />
       </button>
     </div>

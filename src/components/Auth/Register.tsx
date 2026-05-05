@@ -1,10 +1,10 @@
 import { SquareCheckBig, User, Camera, EyeOffIcon, Eye } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useRegisterMutation } from '../API/slices/AuthSlice';
-import { useState } from 'react';
+import { useRegisterMutation } from '../../API/slices/AuthSlice';
+import React, { useRef, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import type {  registerTempData } from '../Types/AuthTypes';
+import type {  registerTempData } from '../../Types/AuthTypes';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
@@ -18,12 +18,15 @@ function SignUpPage  ()  {
      const navigate=useNavigate()
      const[avatar,setAvatar]=useState<File|null>(null)
      const[imgPreview,setImgPreview]=useState("")
-    //  const [errorMessage,setErrorMessage]=useState("")
-        const [showPassword, setShowPassword] = useState(false);
-        const toastSuccess=()=>toast.success("registration successful")
-        const toastError=(err:string)=>toast.error(err)
-        const toastInvalid=()=>toast.error("User already exist")
-        const registerFormik=useFormik({
+     const inputRef=useRef<HTMLInputElement>(null)
+     const [isDragging, setIsDragging] = useState(false);
+     
+         //  const [errorMessage,setErrorMessage]=useState("")
+    const [showPassword, setShowPassword] = useState(false);
+    const toastSuccess=()=>toast.success("registration successful")
+    const toastError=(err:string)=>toast.error(err)
+    const toastInvalid=()=>toast.error("User already exist")
+    const registerFormik=useFormik({
             initialValues: {
               email: '',
               password: '',
@@ -69,6 +72,34 @@ function SignUpPage  ()  {
              }
 
         }
+        const handleFileSelect = (file:File|null) => {
+          if(!file) return;
+          const url=URL.createObjectURL(file)
+          setImgPreview(url)
+          setAvatar(file)
+        }
+        const onDragOver=(e:React.DragEvent<HTMLInputElement>)=>{
+          e.preventDefault()
+          setIsDragging(true)
+        }
+        const onDragLeave=(e:React.DragEvent<HTMLInputElement>)=>{
+          e.preventDefault()
+          setIsDragging(false)
+        }
+        const onDrop=(e:React.DragEvent<HTMLInputElement>)=>{
+          e.preventDefault();
+          setIsDragging(false);
+          const file=e.dataTransfer.files?.[0]
+          if( file)
+          {
+            handleFileSelect(file)
+
+          }
+        }
+        const handleClick=()=>{
+          inputRef.current?.click()
+        }
+          
   return (
     <>
     <div className="flex min-h-screen w-full flex-col md:flex-row bg-[#0a0a0a]">
@@ -106,14 +137,15 @@ function SignUpPage  ()  {
           <div className="flex flex-col items-center mb-8">
             <span className="text-sm font-medium text-gray-300 mb-3">Profile Image</span>
             <div className="relative group cursor-pointer">
-              <label htmlFor='image_upload' className="w-30 h-30 rounded-full border-2 border-dashed border-gray-700 flex flex-col items-center justify-center hover:border-[#8B5CF6] transition-colors bg-[#1a1a1a]">
-                {imgPreview?<img src={imgPreview} alt="Profile" className="w-full h-full rounded-full object-cover" />:
+            <div onClick={handleClick} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop} className={`w-30 h-30 rounded-full border-2 border-dashed border-gray-700 flex flex-col items-center justify-center hover:border-[#8B5CF6] transition-colors bg-[#1a1a1a] ${isDragging ? 'border-[#8B5CF6]' : 'border-gray-700'}`}>
+               {imgPreview?<img src={imgPreview} alt="Profile" className="w-full h-full rounded-full object-cover" />:
                 <div className='flex flex-col justify-center items-center cursor-pointer'>
                 <User className="w-8 h-8 text-gray-500" />
                 <span className="text-[10px] text-gray-500 mt-1 uppercase font-semibold">Click or drag</span>
                 </div>}
-              </label>
-              <input id='image_upload' type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+           <input type='file' accept="image/*" className='hidden' ref={inputRef} onChange={handleFileChange} />
+            </div>
+               
               <div className="absolute bottom-0 right-0 bg-[#8B5CF6] p-1.5 rounded-full border-2 border-[#0a0a0a]">
                 <Camera className="w-3 h-3 text-white" />
               </div>
@@ -179,7 +211,7 @@ function SignUpPage  ()  {
               type="submit"
               className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white font-semibold py-3 rounded-xl transition-colors mt-2"
             >
-              Create Account
+              {isLoading?<CircularProgress size={20}/>:"Create Account"}
             </button>
           </form>
 
@@ -187,7 +219,7 @@ function SignUpPage  ()  {
           <p className="mt-6 text-center text-gray-500 text-sm">
             Already have an account?{' '}
             <NavLink to="/login" className="text-[#8B5CF6] hover:underline font-medium">
-            {isLoading?<CircularProgress size={20}/>:"Sign In"}
+          Sign In
             </NavLink>
           </p>
         </div>

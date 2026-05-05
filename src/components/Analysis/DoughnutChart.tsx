@@ -1,7 +1,7 @@
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { useGetTasksStatsQuery } from "../API/slices/TaskSlice";
+import { useGetTasksStatsQuery } from "../../API/slices/TaskSlice";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 const OPTIONS = {

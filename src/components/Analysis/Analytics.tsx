@@ -1,10 +1,10 @@
 import React from "react";
 import DoughnutChart from "./DoughnutChart";
-import TaskCard from "./TaskCardDate";
 import StatCard from "./StatCard";
-import type{ StatCardData } from "../Types/TaskType";
-import { useGetTasksCDQuery, useGetTasksStatsQuery } from "../API/slices/TaskSlice";
+import type{ StatCardData } from "../../Types/TaskType";
+import { useGetTasksCDQuery, useGetTasksStatsQuery } from "../../API/slices/TaskSlice";
 import { CircularProgress } from "@mui/material";
+import TaskCard from "./TaskCardDate";
 
 const AnalyticsPage: React.FC = () => {
       const {data,isLoading} = useGetTasksStatsQuery()
@@ -48,12 +48,16 @@ const AnalyticsPage: React.FC = () => {
             Track your productivity and task completion
           </p>
         </div>
-
+        {TasksCD?.data.length===0?<div className="w-full flex flex-col gap-4 justify-center items-center md:min-h-[50vh] min-h-screen">
+          <p className="text-white text-3xl ">No Tasks Found</p>
+          <button className="text-white text-3xl bg- ">Start Adding Tasks</button>
+          </div>:
+       <div>
         {/* Main 2-column grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
 
           {/* Left: Doughnut Chart */}
-          <DoughnutChart />
+        <DoughnutChart />
 
           {/* Right: Close Due Date */}
           <div className="bg-[#1a1a1a] border border-white/6 rounded-2xl p-6 flex flex-col gap-4 h-fit">
@@ -79,7 +83,8 @@ const AnalyticsPage: React.FC = () => {
             <StatCard key={card.title} data={card} />
           ))}
         </div>
-
+        </div>
+}
       </div>
     </div>}
     </>

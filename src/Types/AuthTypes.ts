@@ -9,7 +9,10 @@ export interface AuthResponse {
     }
 }
  export interface UserStatusState {
-    isLoggedIn: boolean
+    isLoggedIn: boolean,
+    UserStatus:{
+        isLoggedIn: boolean
+    }
 }
 
 export interface registerTempData {

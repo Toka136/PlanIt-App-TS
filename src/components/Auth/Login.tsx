@@ -1,15 +1,15 @@
 import { Eye, EyeOffIcon, SquareCheckBig } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useLoginMutation } from '../API/slices/AuthSlice';
+import { useLoginMutation } from '../../API/slices/AuthSlice';
 import { CircularProgress } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import { useState } from 'react';
-import type { loginData } from '../Types/AuthTypes';
+import type { loginData } from '../../Types/AuthTypes';
 import { NavLink, useNavigate } from 'react-router-dom';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { useDispatch } from 'react-redux';
-import { setIsLoggedIn } from '../API/slices/UserStatusslice';
+import { setIsLoggedIn } from '../../API/slices/UserStatusslice';
    
        const loginSchema=Yup.object({
         email:Yup.string().email().required(),

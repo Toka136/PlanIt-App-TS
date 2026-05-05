@@ -1,8 +1,8 @@
 import { Routes,Route } from "react-router-dom"
-import Dashboard from "./Dashboard"
-import SidebarTasks from "./Sidebar"
-import AnalyticsPage from "./Analytics"
-import ProfileSettings from "./Profile"
+import Dashboard from "./Tasks/Dashboard"
+import SidebarTasks from "./SideBar/Sidebar"
+import AnalyticsPage from "./Analysis/Analytics"
+import ProfileSettings from "../components/User/Profile"
 
 function General(){
     return(

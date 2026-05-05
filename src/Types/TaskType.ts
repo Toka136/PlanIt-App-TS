@@ -57,6 +57,12 @@ export interface confirmDeleteType{
    handleDelete: (id: string) => void ,
    isLoading?:boolean
 }
+export interface deleteUserType{
+   open_confirm: boolean,
+   handleClose: () => void, 
+   handleDelete: () => void ,
+   isLoading?:boolean
+  }
 
 export interface StatsType{
     _id: string,
@@ -88,4 +94,26 @@ export type paginationType={
   count: number,
  onPageChange: ( page: number) => void,
  page: number
+}
+export interface NavItem {
+  label: string;
+  icon: React.ReactNode;
+  to: string;
+}
+export interface NavButtonProps {
+  item: NavItem;
+  onClick?: () => void;
+}
+export interface UserCardProps {
+  avatar?: string;
+  userName?: string;
+  email?: string;
+}
+export interface SidebarContentProps {
+  data: { data: { avatar?: string; userName?: string; email?: string } } | undefined;
+  onNavClick: () => void;
+  onLogout: () => void;
+}
+export interface LogoutButtonProps {
+  onClick: () => void;
 }

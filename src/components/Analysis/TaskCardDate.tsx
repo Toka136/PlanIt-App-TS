@@ -1,5 +1,5 @@
 import React from "react";
-import type{ Task, TaskStat } from "../Types/TaskType";
+import type{ Task, TaskStat } from "../../Types/TaskType";
 
 interface TaskCardProps {
   task: TaskStat;

@@ -13,13 +13,13 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { X, CalendarDays } from "lucide-react";
-import type { addTask, TaskCardProps } from "../Types/TaskType";
+import type { addTask, TaskCardProps } from "../../Types/TaskType";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import type { TaskType } from "../Types/TaskType";
-import type { taskPriority } from "../Types/TaskType";
-import type { taskStatus } from "../Types/TaskType";
-import { useCreateTaskMutation, useUpdateTaskMutation } from "../API/slices/TaskSlice";
+import type { TaskType } from "../../Types/TaskType";
+import type { taskPriority } from "../../Types/TaskType";
+import type { taskStatus } from "../../Types/TaskType";
+import { useCreateTaskMutation, useUpdateTaskMutation } from "../../API/slices/TaskSlice";
 import { useEffect, useState } from "react";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 const taskSchema = Yup.object({
@@ -42,6 +42,7 @@ export default function AddEditTaskModal({ open, onClose,edit,old_task }: addTas
     console.log("adding error",err)
     const error=err as FetchBaseQueryError
     const errorData = error.data as { message: string };
+     if(errorData.message!=="jwt expired")
     setErrorMessage(errorData.message)
   }
 
@@ -56,6 +57,7 @@ const onUpdate =async (values: TaskCardProps) => {
     console.log("adding error",err)
     const error=err as FetchBaseQueryError
     const errorData = error.data as { message: string };
+    if(errorData.message!=="jwt expired")
     setErrorMessage(errorData.message)
   }
    

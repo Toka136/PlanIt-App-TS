@@ -1,7 +1,7 @@
 import  { useState, useRef, useEffect } from "react";
 import { Calendar, Zap, SquarePen, Trash2, MoreVertical } from "lucide-react";
-import type { TaskCardProps, taskPriority, taskStatus ,confirmDeleteType} from "../Types/TaskType";
-import { useDeleteTaskMutation } from '../API/slices/TaskSlice';
+import type { TaskCardProps, taskPriority, taskStatus ,confirmDeleteType} from "../../Types/TaskType";
+import { useDeleteTaskMutation } from '../../API/slices/TaskSlice';
 
 import { 
   Dialog,
