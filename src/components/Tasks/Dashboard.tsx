@@ -51,7 +51,7 @@ function Dashboard  () {
     },[userStatus])
   useEffect(()=>{
     if(error){
-      console.log(error)
+      console.log("error in dashboard",error)
      
     } 
   // eslint-disable-next-line react-hooks/exhaustive-deps

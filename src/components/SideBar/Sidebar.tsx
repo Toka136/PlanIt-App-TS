@@ -70,6 +70,7 @@ const SidebarTasks = () => {
 
   return (
     <>
+    {console.log("UserDataSidebar",data)}
       {/* ── Hamburger toggle (visible only on small screens) ── */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}

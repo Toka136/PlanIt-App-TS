@@ -9,6 +9,9 @@ import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import {  toast, ToastContainer } from "react-toastify";
 import ConfirmDialog from "./DeleteAccount";
 import {  useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setIsLoggedIn } from "../../API/slices/UserStatusslice";
+import { useLogOutMutation } from "../../API/slices/AuthSlice";
 const profileSchema=Yup.object({
   userName: Yup.string().required(),
   currentPassword: Yup.string(),
@@ -20,6 +23,7 @@ export default function ProfileSettings() {
   const {data:user,isLoading}=useGetUserQuery()
   const[updateUser,{isLoading:updateUserLoading,error}]=useUpdateUserMutation()
   const [deleteUser,{isLoading:deleteLoading}]=useDeleteUserMutation()
+  const [logout]=useLogOutMutation()
    const [isDragging, setIsDragging] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string|null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -30,6 +34,7 @@ export default function ProfileSettings() {
    const[open_confirm,setOpen_confirm]=useState<boolean>(false)
    const handleClose=()=>{setOpen_confirm(false)}
    const navigate=useNavigate()
+   const dispatch=useDispatch()
   const profilFormik=useFormik({
    initialValues:{
   userName: "",
@@ -65,17 +70,35 @@ export default function ProfileSettings() {
       console.log("error",error)
     }
   },[error])
+
+    const handleLogout = async () => {
+      try {
+        await logout().unwrap();
+        dispatch(setIsLoggedIn(false));
+      } catch (err) {
+        console.error("Logout error:", err);
+      }
+    };
   const handleUpdate=async(values:UpdateData)=>{
+    let resetPassword=false;
         const formData=new FormData()
        if(values.userName.length>1)formData.append("userName",values.userName)
-       if(values.currentPassword.length >1)formData.append("currentPassword",values.currentPassword)
-       if(values.newPassword.length >1)formData.append("password",values.newPassword)
+       if(values.currentPassword.length >1){
+        formData.append("currentPassword",values.currentPassword)
+      }
+
+       if(values.newPassword.length >1){
+        formData.append("password",values.newPassword)
+                resetPassword=true
+       }
        if(avatar){
         formData.append("avatar",avatar)
        }
        console.log("formdata",formData)
      try {
       const res=await updateUser(formData).unwrap()
+      if(resetPassword)
+        handleLogout()
       console.log(res)
       setErrorMessage(null)
       
@@ -89,6 +112,7 @@ export default function ProfileSettings() {
       await deleteUser().unwrap()
       console.log("account deleted")
       toast.info("account deleted")
+      dispatch(setIsLoggedIn(false));
       setTimeout(() => {
          navigate("/login")
       }, 1000);
