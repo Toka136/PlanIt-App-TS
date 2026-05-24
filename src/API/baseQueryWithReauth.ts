@@ -1,7 +1,7 @@
 import { fetchBaseQuery, type BaseQueryFn, type FetchArgs, type FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { setIsLoggedIn } from "./slices/UserStatusslice";
 const baseQuery=fetchBaseQuery({
-    baseUrl:"http://localhost:4000/api/",
+    baseUrl:"https://67eb4a66-3fe2-4b57-8471-e1dc7ad669f0-00-2m6s5g8fayiaf.spock.replit.dev/api/",
     credentials:"include"
 })
 export const baseQueryWithReauth:BaseQueryFn<

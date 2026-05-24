@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 const taskSchema = Yup.object({
   title: Yup.string().required("title is required"),
-  description: Yup.string().required("title is required"),
+  description: Yup.string().required("description is required"),
   dueDate: Yup.date().min(new Date(), "Date must be in the future"),
 });
 
