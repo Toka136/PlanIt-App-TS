@@ -7,11 +7,10 @@ export interface AuthResponse {
         avatar: string,
         token?: string
     }
-}
- export interface UserStatusState {
+} export interface UserStatusState {
     isLoggedIn: boolean,
-    UserStatus:{
-        isLoggedIn: boolean
+    UserStatus?:{
+        isLoggedIn:boolean
     }
 }
 

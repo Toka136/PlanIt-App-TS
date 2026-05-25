@@ -3,20 +3,19 @@ import { useEffect, useRef, useState } from "react";
 import {  CircularProgress } from "@mui/material";
 import {  Menu, X } from "lucide-react";
 import { useLogOutMutation } from "../../API/slices/AuthSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { setIsLoggedIn } from "../../API/slices/UserStatusslice";
 import { useGetUserQuery } from "../../API/slices/UserSlics";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import type { UserStatusState } from "../../Types/AuthTypes";
 import { SidebarContent } from "./sidebarContent";
+import { UseAppDispatch, UseAppSelector } from "../../Types/StoreHooks";
 const SidebarTasks = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, isError, error,refetch } = useGetUserQuery();
   const [logout] = useLogOutMutation();
-  const dispatch = useDispatch();
-  const userStatus=useSelector((state:UserStatusState)=>state.UserStatus.isLoggedIn)
+  const dispatch =UseAppDispatch()
+  const userStatus=UseAppSelector((state)=>state.UserStatus.isLoggedIn)
   useEffect(()=>{
     if(userStatus)
     refetch()

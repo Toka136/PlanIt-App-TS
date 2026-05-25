@@ -279,7 +279,7 @@ useEffect(() => {
                 },
               }}
             />
-            {taskForm.errors.description && (
+            {taskForm.errors.description && taskForm.touched.description && (
               <div
                 className="text-red-500"
                 style={{

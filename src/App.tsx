@@ -3,10 +3,9 @@ import LoginPage from './components/Auth/Login'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import SignUpPage from './components/Auth/Register'
 import General from './components/General'
-import { useSelector } from 'react-redux'
-import type { UserStatusState } from './Types/AuthTypes'
+import { UseAppSelector } from './Types/StoreHooks'
 function App() {
-  const userStatus=useSelector((state:UserStatusState)=>state.UserStatus.isLoggedIn)
+  const userStatus=UseAppSelector((state)=>state.UserStatus.isLoggedIn)
   console.log("userStatus",userStatus)
   return (
   <>

@@ -8,8 +8,8 @@ import { useState } from 'react';
 import type { loginData } from '../../Types/AuthTypes';
 import { NavLink, useNavigate } from 'react-router-dom';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '../../API/slices/UserStatusslice';
+import { UseAppDispatch } from '../../Types/StoreHooks';
    
        const loginSchema=Yup.object({
         email:Yup.string().email().required(),
@@ -22,7 +22,7 @@ function LoginPage  () {
     const toastSuccess=()=>toast.success("Login successful")
     const toastError=()=>toast.error("Something went wrong")
     const toastInvalid=()=>toast.error("Invalid credentials")
-    const dispatch=useDispatch()
+    const dispatch=UseAppDispatch()
     const loginFormik=useFormik({
         initialValues: {
           email: '',

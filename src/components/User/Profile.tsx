@@ -9,9 +9,9 @@ import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import {  toast, ToastContainer } from "react-toastify";
 import ConfirmDialog from "./DeleteAccount";
 import {  useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { setIsLoggedIn } from "../../API/slices/UserStatusslice";
 import { useLogOutMutation } from "../../API/slices/AuthSlice";
+import { UseAppDispatch } from "../../Types/StoreHooks";
 const profileSchema=Yup.object({
   userName: Yup.string().required(),
   currentPassword: Yup.string(),
@@ -34,7 +34,7 @@ export default function ProfileSettings() {
    const[open_confirm,setOpen_confirm]=useState<boolean>(false)
    const handleClose=()=>{setOpen_confirm(false)}
    const navigate=useNavigate()
-   const dispatch=useDispatch()
+   const dispatch=UseAppDispatch()
   const profilFormik=useFormik({
    initialValues:{
   userName: "",

@@ -13,3 +13,5 @@ export const tasksStore=configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(AuthSlice.middleware).concat(TaskSlice.middleware).concat(UserSlice.middleware),
 
 });
+export type RootState = ReturnType<typeof tasksStore.getState>;
+export type AppDispatch = typeof tasksStore.dispatch;

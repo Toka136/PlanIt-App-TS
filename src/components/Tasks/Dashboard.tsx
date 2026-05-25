@@ -12,8 +12,7 @@ import type { paginationType } from '../../Types/TaskType';
 import AddEditTaskModal from './AddTask';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { useSelector } from 'react-redux';
-import type { UserStatusState } from '../../Types/AuthTypes';
+import { UseAppSelector } from '../../Types/StoreHooks';
 
 function BasicPagination({count,onPageChange,page}:paginationType) {
   return (
@@ -43,19 +42,19 @@ function Dashboard  () {
     const[filterText,setFilterText]=useState<string>("All")
     const[searchText,setSearchText]=useState<string>("")
     const limit:number=3
-  const{data,isLoading,isError,error,refetch}=useGetTasksQuery({limit:limit,page,status:filterText,search:searchText})
-    const userStatus=useSelector((state:UserStatusState)=>state.UserStatus.isLoggedIn)
+  const{data,isLoading,refetch}=useGetTasksQuery({limit:limit,page,status:filterText,search:searchText})
+    const userStatus=UseAppSelector((state)=>state.UserStatus.isLoggedIn)
     useEffect(()=>{
       if(userStatus)
       refetch()
     },[userStatus])
-  useEffect(()=>{
-    if(error){
-      console.log("error in dashboard",error)
+  // useEffect(()=>{
+  //   if(error){
+  //     console.log("error in dashboard",error)
      
-    } 
+  //   } 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[isError])
+  // },[isError])
   useEffect(() => {
    if (data?.data.length === 0 && page > 1) {
       setPage(1);
