@@ -48,19 +48,15 @@ const AnalyticsPage: React.FC = () => {
             Track your productivity and task completion
           </p>
         </div>
-        {TasksCD?.data.length===0?<div className="w-full flex flex-col gap-4 justify-center items-center md:min-h-[50vh] min-h-screen">
-          <p className="text-white text-3xl ">No Tasks Found</p>
-          <button className="text-white text-3xl bg- ">Start Adding Tasks</button>
-          </div>:
+       
+
        <div>
         {/* Main 2-column grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
 
           {/* Left: Doughnut Chart */}
         <DoughnutChart />
-
-          {/* Right: Close Due Date */}
-          <div className="bg-[#1a1a1a] border border-white/6 rounded-2xl p-6 flex flex-col gap-4 h-fit">
+ <div className="bg-[#1a1a1a] border border-white/6 rounded-2xl p-6 flex flex-col gap-4 h-fit">
             <h2 className="text-white text-lg font-semibold tracking-tight">
               Close Due Date
             </h2>
@@ -75,6 +71,9 @@ const AnalyticsPage: React.FC = () => {
             </div>
             }
           </div>
+          {/* Right: Close Due Date */}
+         
+    
         </div>
 
         {/* Bottom stats row */}
@@ -84,7 +83,6 @@ const AnalyticsPage: React.FC = () => {
           ))}
         </div>
         </div>
-}
       </div>
     </div>}
     </>
