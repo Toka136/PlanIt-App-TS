@@ -1,7 +1,7 @@
 import { fetchBaseQuery, type BaseQueryFn, type FetchArgs, type FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { setIsLoggedIn } from "./slices/UserStatusslice";
 const baseQuery=fetchBaseQuery({
-    baseUrl:"https://planit-app-production.up.railway.app/api/",
+    baseUrl: import.meta.env.VITE_API_URL,
     credentials:"include"
 })
 export const baseQueryWithReauth:BaseQueryFn<
